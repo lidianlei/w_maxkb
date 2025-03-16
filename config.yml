@@ -1,0 +1,16 @@
+# 数据库链接信息
+DB_NAME: maxkb
+DB_HOST: localhost
+DB_PORT: 5432
+DB_USER: postgres
+DB_PASSWORD: root
+DB_ENGINE: django.db.backends.postgresql
+
+# 模型路径配置
+MODEL_PATH: J:/MaxKB/data/model
+MODEL_CACHE_FOLDER: J:/MaxKB/data/model/cache
+
+# 向量模型配置
+EMBEDDING_MODEL_NAME: shibing624/text2vec-base-chinese
+EMBEDDING_MODEL_PATH: J:/MaxKB/data/model
+EMBEDDING_DEVICE: cpu 

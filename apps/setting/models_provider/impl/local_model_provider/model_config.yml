@@ -1,0 +1,9 @@
+embedding:
+  model_name: shibing624/text2vec-base-chinese
+  cache_folder: J:/MaxKB/data/model/cache
+  device: cpu
+  use_local: true
+  model_kwargs:
+    device: cpu
+  encode_kwargs:
+    normalize_embeddings: true 

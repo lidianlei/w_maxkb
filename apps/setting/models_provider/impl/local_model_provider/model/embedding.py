@@ -52,11 +52,28 @@ class LocalEmbedding(MaxKBBaseModel, HuggingFaceEmbeddings):
     @staticmethod
     def new_instance(model_type, model_name, model_credential: Dict[str, object], **model_kwargs):
         if model_kwargs.get('use_local', True):
-            return LocalEmbedding(model_name=model_name, cache_folder=model_credential.get('cache_folder'),
-                                  model_kwargs={'device': model_credential.get('device')},
-                                  encode_kwargs={'normalize_embeddings': True}
-                                  )
-        return WebLocalEmbedding(model_name=model_name, cache_folder=model_credential.get('cache_folder'),
-                                 model_kwargs={'device': model_credential.get('device')},
-                                 encode_kwargs={'normalize_embeddings': True},
-                                 **model_kwargs)
+            try:
+                # 首先尝试从本地加载
+                cache_folder = "J:/MaxKB/data/model/cache"
+                model = LocalEmbedding(
+                    model_name="shibing624/text2vec-base-chinese",
+                    cache_folder=cache_folder,
+                    model_kwargs={
+                        'device': model_credential.get('device', 'cpu'),
+                        'use_auth_token': None
+                    },
+                    encode_kwargs={'normalize_embeddings': True}
+                )
+                # 测试模型
+                test_text = "测试文本"
+                _ = model.embed_query(test_text)
+                return model
+            except Exception as e:
+                print(f"模型加载失败: {str(e)}")
+                raise ValueError(f"模型加载失败，请确保模型已下载: {str(e)}")
+                
+        return WebLocalEmbedding(model_name=model_name, 
+                               cache_folder=model_credential.get('cache_folder'),
+                               model_kwargs={'device': model_credential.get('device')},
+                               encode_kwargs={'normalize_embeddings': True},
+                               **model_kwargs)
