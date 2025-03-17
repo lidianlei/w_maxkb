@@ -174,7 +174,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-TIME_ZONE = CONFIG.get_time_zone()
+TIME_ZONE = 'Asia/Shanghai'
 
 # 启用国际化
 USE_I18N = True
@@ -186,7 +186,7 @@ USE_L10N = True
 USE_TZ = True
 
 # 默认语言
-LANGUAGE_CODE = CONFIG.get("LANGUAGE_CODE")
+LANGUAGE_CODE = 'zh-hans'
 
 # 支持的语言
 LANGUAGES = [

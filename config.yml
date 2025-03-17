@@ -14,3 +14,8 @@ MODEL_CACHE_FOLDER: J:/MaxKB/data/model/cache
 EMBEDDING_MODEL_NAME: shibing624/text2vec-base-chinese
 EMBEDDING_MODEL_PATH: J:/MaxKB/data/model
 EMBEDDING_DEVICE: cpu 
+
+# 时区设置
+TIME_ZONE: Asia/Shanghai
+USE_TZ: true
+LANGUAGE_CODE: zh-hans 
