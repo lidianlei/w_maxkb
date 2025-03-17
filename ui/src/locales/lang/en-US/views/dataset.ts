@@ -1,5 +1,6 @@
 export default {
   title: 'Knowledge',
+  llaMa: 'LLaMAFactory',
   createDataset: 'Create Knowledge',
   general: 'General',
   web: 'Web Site',
