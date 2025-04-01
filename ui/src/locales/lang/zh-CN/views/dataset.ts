@@ -1,6 +1,6 @@
 export default {
   title: '知识库',
-  llaMa: 'LLaMAFactory',
+  llaMa: '模型训练',
   createDataset: '创建知识库',
   general: '通用型',
   web: 'web 站点',
