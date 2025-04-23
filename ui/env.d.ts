@@ -19,13 +19,3 @@ interface ImportMeta {
 declare type Recordable<T = any> = Record<string, T>
 
 
-pg_ctl.exe -D J:\postgresql\data -l logfile start
-
-
-call "J:\visual\VC\Auxiliary\Build\vcvars64.bat"
-
-
-set "PGROOT=E:\Environment\postgres"
-
-
-set "PGROOT=J:\\postgresql"
