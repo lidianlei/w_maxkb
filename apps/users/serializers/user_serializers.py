@@ -86,7 +86,7 @@ class LoginSerializer(ApiMixin, serializers.Serializer):
         if user is None:
             raise ExceptionCodeConstants.INCORRECT_USERNAME_AND_PASSWORD.value.to_app_api_exception()
         if not user.is_active:
-            raise AppApiException(1005, _("The user has been disabled, please contact the administrator!"))
+            raise AppApiException(1005, _("用户已被禁用，请联系管理员!"))
         return user
 
     def get_user_token(self):
@@ -138,14 +138,14 @@ class RegisterSerializer(ApiMixin, serializers.Serializer):
                                      min_length=6,
                                      validators=[
                                          validators.RegexValidator(regex=re.compile("^.{6,20}$"),
-                                                                   message=_("Username must be 6-20 characters long"))
+                                                                   message=_("用户名长度必须为 6-20 个字符"))
                                      ])
     password = serializers.CharField(required=True, error_messages=ErrMessage.char(_("Password")),
                                      validators=[validators.RegexValidator(regex=re.compile(
                                          "^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z_!@#$%^&*`~.()-+=]+$)(?![a-z0-9]+$)(?![a-z_!@#$%^&*`~()-+=]+$)"
                                          "(?![0-9_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9_!@#$%^&*`~.()-+=]{6,20}$")
                                          , message=_(
-                                             "The password must be 6-20 characters long and must be a combination of letters, numbers, and special characters."))])
+                                             "密码长度必须为 6-20 个字符，并且必须是字母、数字和特殊字符的组合."))])
 
     re_password = serializers.CharField(required=True,
                                         error_messages=ErrMessage.char(_("Confirm Password")),
@@ -153,9 +153,9 @@ class RegisterSerializer(ApiMixin, serializers.Serializer):
                                             "^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z_!@#$%^&*`~.()-+=]+$)(?![a-z0-9]+$)(?![a-z_!@#$%^&*`~()-+=]+$)"
                                             "(?![0-9_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9_!@#$%^&*`~.()-+=]{6,20}$")
                                             , message=_(
-                                                "The password must be 6-20 characters long and must be a combination of letters, numbers, and special characters."))])
+                                                "密码长度必须为 6-20 个字符，并且必须是字母、数字和特殊字符的组合."))])
 
-    code = serializers.CharField(required=True, error_messages=ErrMessage.char(_("Verification code")))
+    code = serializers.CharField(required=True, error_messages=ErrMessage.char(_("验证码")))
 
     class Meta:
         model = User
@@ -187,7 +187,7 @@ class RegisterSerializer(ApiMixin, serializers.Serializer):
 
     @valid_license(model=User, count=2,
                    message=_(
-                       "The community version supports up to 2 users. If you need more users, please contact us (https://fit2cloud.com/)."))
+                       "请联系管理员"))
     @transaction.atomic
     def save(self, **kwargs):
         m = User(
@@ -226,7 +226,7 @@ class CheckCodeSerializer(ApiMixin, serializers.Serializer):
         error_messages=ErrMessage.char(_("Email")),
         validators=[validators.EmailValidator(message=ExceptionCodeConstants.EMAIL_FORMAT_ERROR.value.message,
                                               code=ExceptionCodeConstants.EMAIL_FORMAT_ERROR.value.code)])
-    code = serializers.CharField(required=True, error_messages=ErrMessage.char(_("Verification code")))
+    code = serializers.CharField(required=True, error_messages=ErrMessage.char(_("验证码")))
 
     type = serializers.CharField(required=True,
                                  error_messages=ErrMessage.char(_("Type")),
@@ -295,14 +295,14 @@ class RePasswordSerializer(ApiMixin, serializers.Serializer):
                                          "^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z_!@#$%^&*`~.()-+=]+$)(?![a-z0-9]+$)(?![a-z_!@#$%^&*`~()-+=]+$)"
                                          "(?![0-9_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9_!@#$%^&*`~.()-+=]{6,20}$")
                                          , message=_(
-                                             "The confirmation password must be 6-20 characters long and must be a combination of letters, numbers, and special characters."))])
+                                             "确认密码长度必须为 6-20 个字符，并且必须是字母、数字和特殊字符的组合。"))])
 
     re_password = serializers.CharField(required=True, error_messages=ErrMessage.char(_("Confirm Password")),
                                         validators=[validators.RegexValidator(regex=re.compile(
                                             "^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z_!@#$%^&*`~.()-+=]+$)(?![a-z0-9]+$)(?![a-z_!@#$%^&*`~()-+=]+$)"
                                             "(?![0-9_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9_!@#$%^&*`~.()-+=]{6,20}$")
                                             , message=_(
-                                                "The confirmation password must be 6-20 characters long and must be a combination of letters, numbers, and special characters."))]
+                                                "确认密码长度必须为 6-20 个字符，并且必须是字母、数字和特殊字符的组合。"))]
                                         )
 
     class Meta:
@@ -377,7 +377,7 @@ class SendEmailSerializer(ApiMixin, serializers.Serializer):
         code_cache_key_lock = code_cache_key + "_lock"
         ttl = user_cache.ttl(code_cache_key_lock)
         if ttl is not None:
-            raise AppApiException(500, _("Do not send emails again within {seconds} seconds").format(
+            raise AppApiException(500, _("在 {seconds} 秒内不再发送电子邮件").format(
                 seconds=int(ttl.total_seconds())))
         return True
 
@@ -407,7 +407,7 @@ class SendEmailSerializer(ApiMixin, serializers.Serializer):
         if system_setting is None:
             user_cache.delete(code_cache_key_lock)
             raise AppApiException(1004,
-                                  _("The email service has not been set up. Please contact the administrator to set up the email service in [Email Settings]."))
+                                  _("尚未设置电子邮件服务。请联系管理员在 [电子邮件设置] 中设置电子邮件服务."))
         try:
             connection = EmailBackend(system_setting.meta.get("email_host"),
                                       system_setting.meta.get('email_port'),
@@ -418,7 +418,7 @@ class SendEmailSerializer(ApiMixin, serializers.Serializer):
                                       system_setting.meta.get('email_use_ssl')
                                       )
             # 发送邮件
-            send_mail(_('【Intelligent knowledge base question and answer system-{action}】').format(
+            send_mail(_('【智能知识库问答系统-{action}】').format(
                 action=_('User registration') if state == 'register' else _('Change password')),
                 '',
                 html_message=f'{content.replace("${code}", code)}',
@@ -673,7 +673,7 @@ class UserManageSerializer(serializers.Serializer):
                                              "^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z_!@#$%^&*`~.()-+=]+$)(?![a-z0-9]+$)(?![a-z_!@#$%^&*`~()-+=]+$)"
                                              "(?![0-9_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9_!@#$%^&*`~.()-+=]{6,20}$")
                                              , message=_(
-                                                 "The password must be 6-20 characters long and must be a combination of letters, numbers, and special characters."))])
+                                                 "密码长度必须为 6-20 个字符，并且必须是字母、数字和特殊字符的组合."))])
 
         nick_name = serializers.CharField(required=False, error_messages=ErrMessage.char(_("Name")), max_length=64,
                                           allow_null=True, allow_blank=True)
@@ -745,13 +745,13 @@ class UserManageSerializer(serializers.Serializer):
                                              "^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z_!@#$%^&*`~.()-+=]+$)(?![a-z0-9]+$)(?![a-z_!@#$%^&*`~()-+=]+$)"
                                              "(?![0-9_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9_!@#$%^&*`~.()-+=]{6,20}$")
                                              , message=_(
-                                                 "The password must be 6-20 characters long and must be a combination of letters, numbers, and special characters."))])
+                                                 "密码长度必须为 6-20 个字符，并且必须是字母、数字和特殊字符的组合."))])
         re_password = serializers.CharField(required=True, error_messages=ErrMessage.char(_("Confirm Password")),
                                             validators=[validators.RegexValidator(regex=re.compile(
                                                 "^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z_!@#$%^&*`~.()-+=]+$)(?![a-z0-9]+$)(?![a-z_!@#$%^&*`~()-+=]+$)"
                                                 "(?![0-9_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9_!@#$%^&*`~.()-+=]{6,20}$")
                                                 , message=_(
-                                                    "The confirmation password must be 6-20 characters long and must be a combination of letters, numbers, and special characters."))]
+                                                    "确认密码长度必须为 6-20 个字符，并且必须是字母、数字和特殊字符的组合."))]
                                             )
 
         @staticmethod
@@ -774,7 +774,7 @@ class UserManageSerializer(serializers.Serializer):
 
     @valid_license(model=User, count=2,
                    message=_(
-                       'The community version supports up to 2 users. If you need more users, please contact us (https://fit2cloud.com/).'))
+                       '请联系管理员'))
     @transaction.atomic
     def save(self, instance, with_valid=True):
         if with_valid:
