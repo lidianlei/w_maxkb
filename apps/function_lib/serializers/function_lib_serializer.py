@@ -149,7 +149,9 @@ class FunctionLibSerializer(serializers.Serializer):
                                        user_id=self.data.get('user_id'),
                                        input_field_list=instance.get('input_field_list'),
                                        permission_type=instance.get('permission_type'),
-                                       is_active=instance.get('is_active', True))
+                                       function_type=instance.get('function_type', 'PYTHON'),
+                                       is_active=instance.get('is_active', True),
+                                       icon='icon_function_outlined.svg')
             function_lib.save()
             return FunctionLibModelSerializer(function_lib).data
 
