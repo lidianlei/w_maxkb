@@ -83,7 +83,7 @@ class Application(AppModelMixin):
         return ('已知信息：'
                 '\n{data}'
                 '\n回答要求：'
-                '\n- 如果你不知道答案或者没有从获取答案，请回答“没有在知识库中查找到相关信息，建议咨询相关技术支持或参考官方文档进行操作”。'
+                '\n- 如果你不知道答案或者没有从获取答案，请回答"没有在知识库中查找到相关信息，建议咨询相关技术支持或参考官方文档进行操作"。'
                 '\n- 避免提及你是从<data></data>中获得的知识。'
                 '\n- 请保持答案与<data></data>中描述的一致。'
                 '\n- 请使用markdown 语法优化答案的格式。'
@@ -123,6 +123,7 @@ class Chat(AppModelMixin):
     abstract = models.CharField(max_length=1024, verbose_name="摘要")
     client_id = models.UUIDField(verbose_name="客户端id", default=None, null=True)
     is_deleted = models.BooleanField(verbose_name="", default=False)
+    asker = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name="提问者", null=True)
 
     class Meta:
         db_table = "application_chat"

@@ -138,7 +138,7 @@ class ChatInfo:
             # 插入数据库
             if not QuerySet(Chat).filter(id=self.chat_id).exists():
                 Chat(id=self.chat_id, application_id=self.application.id, abstract=chat_record.problem_text[0:1024],
-                     client_id=client_id, update_time=datetime.now()).save()
+                     client_id=client_id, update_time=datetime.now(), asker=self.application.user_id).save()
             else:
                 Chat.objects.filter(id=self.chat_id).update(update_time=datetime.now())
             # 插入会话记录
@@ -206,7 +206,7 @@ class OpenAIChatSerializer(serializers.Serializer):
             chat_id = str(uuid.uuid1())
         chat = QuerySet(Chat).filter(id=chat_id).first()
         if chat is None:
-            Chat(id=chat_id, application_id=application_id, abstract=message[0:1024], client_id=client_id).save()
+            Chat(id=chat_id, application_id=application_id, abstract=message[0:1024], client_id=client_id, asker=application.user_id).save()
         return chat_id
 
     def chat(self, instance: Dict, with_valid=True):
