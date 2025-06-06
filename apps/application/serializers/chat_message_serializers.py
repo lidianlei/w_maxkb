@@ -39,6 +39,7 @@ from dataset.models import Paragraph, Document
 from setting.models import Model, Status
 from setting.models_provider import get_model_credential
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 chat_cache = caches['chat_cache']
 
@@ -137,8 +138,9 @@ class ChatInfo:
         if self.application.id is not None:
             # 插入数据库
             if not QuerySet(Chat).filter(id=self.chat_id).exists():
+                user = QuerySet(User).filter(id=self.application.user_id).first()
                 Chat(id=self.chat_id, application_id=self.application.id, abstract=chat_record.problem_text[0:1024],
-                     client_id=client_id, update_time=datetime.now(), asker=self.application.user_id).save()
+                     client_id=client_id, update_time=datetime.now(), asker=user).save()
             else:
                 Chat.objects.filter(id=self.chat_id).update(update_time=datetime.now())
             # 插入会话记录
@@ -206,7 +208,9 @@ class OpenAIChatSerializer(serializers.Serializer):
             chat_id = str(uuid.uuid1())
         chat = QuerySet(Chat).filter(id=chat_id).first()
         if chat is None:
-            Chat(id=chat_id, application_id=application_id, abstract=message[0:1024], client_id=client_id, asker=application.user_id).save()
+            application = QuerySet(Application).filter(id=application_id).first()
+            user = QuerySet(User).filter(id=application.user_id).first()
+            Chat(id=chat_id, application_id=application_id, abstract=message[0:1024], client_id=client_id, asker=user).save()
         return chat_id
 
     def chat(self, instance: Dict, with_valid=True):

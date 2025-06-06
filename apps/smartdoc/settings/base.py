@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'dataset',
     'application',
     'embedding',
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
